@@ -74,6 +74,9 @@ namespace TinySwordsBattle
             {
                 foreach (Transform child in look.set.transform)
                 {
+                    // the sky and the horizon tree line (drawn behind the castles) span every map width already
+                    var r = child.GetComponent<SpriteRenderer>();
+                    if (r != null && r.sortingOrder <= -500) continue;
                     Vector3 p = child.position;
                     p.x *= halfWidth / BuiltHalfWidth;
                     child.position = p;

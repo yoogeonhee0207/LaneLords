@@ -823,6 +823,7 @@ namespace TinySwordsBattle.EditorTools
         // ======================= Chapter themes =======================
 
         const string PropArt = Root + "/Art/Props/";
+        const string SkyArt = Root + "/Art/Sky/";
         static Sprite softCircle;
 
         [MenuItem("Tools/Lane Lords/Preview Chapter 1")] static void Preview1() { PreviewChapter(1); }
@@ -902,7 +903,8 @@ namespace TinySwordsBattle.EditorTools
             float fps, int order = int.MinValue, bool flip = false, float pauseMin = 0f, float pauseMax = 0f, bool hide = false)
         {
             if (frames == null || frames.Length == 0) return null;
-            var go = ThemeProp(parent, name, frames[0], x, footY, scale, tint, order, flip);
+            // start on a middle frame: the first frame of effects like fire is almost empty
+            var go = ThemeProp(parent, name, frames[frames.Length / 2], x, footY, scale, tint, order, flip);
             var fb = go.AddComponent<SpriteFlipbook>();
             fb.frames = frames;
             fb.fps = fps;
@@ -944,8 +946,6 @@ namespace TinySwordsBattle.EditorTools
             softCircle = PrepareProp(PropArt + "soft_circle.png", false);
             Sprite vignetteSprite = PrepareProp(PropArt + "vignette.png", false);
             var bamboo = new[] { PrepareProp(PropArt + "bamboo_1.png", true), PrepareProp(PropArt + "bamboo_2.png", true), PrepareProp(PropArt + "bamboo_3.png", true) };
-            Sprite cliffA = PrepareProp(PropArt + "cliff_a.png", true);
-            Sprite cliffB = PrepareProp(PropArt + "cliff_b.png", true);
 
             string trees = TS + "/Pawn and Resources/Wood/Trees/";
             Sprite[] pine1 = Frames(trees + "Tree1.png"), pine2 = Frames(trees + "Tree2.png");
@@ -953,8 +953,6 @@ namespace TinySwordsBattle.EditorTools
             Sprite[] bush = Frames(TS + "/Terrain/Decorations/Bushes/Bush 1.png");
             Sprite[] bush2 = Frames(TS + "/Terrain/Decorations/Bushes/Bush 2.png");
             Sprite[] sheep = Frames(TS + "/Pawn and Resources/Meat/Sheep/Sheep_Grass.png");
-            Sprite[] waterRocks1 = Frames(TS + "/Terrain/Decorations/Rocks in the Water/Water Rocks_01.png");
-            Sprite[] waterRocks2 = Frames(TS + "/Terrain/Decorations/Rocks in the Water/Water Rocks_02.png");
             Sprite[] splash = Frames(TS + "/Particle FX/Water Splash.png");
             Sprite[] duck = Frames(TS + "/Terrain/Decorations/Rubber Duck/Rubber duck.png");
             Sprite[] fire1 = Frames(TS + "/Particle FX/Fire_01.png"), fire2 = Frames(TS + "/Particle FX/Fire_02.png"), fire3 = Frames(TS + "/Particle FX/Fire_03.png");
@@ -995,10 +993,20 @@ namespace TinySwordsBattle.EditorTools
                 theme.looks[i] = new ChapterLook { set = set };
             }
 
-            // Back props stand on the far shore between the workers' forest (x < -3.6) and the enemy castle (x > 6.3).
-            // Land top is y = 0.6, the lane is at y = -1.7, and the unit buttons cover everything below y = -2.9.
+            // Layout: the chapter's sky picture covers everything above the shore (y 0.6), following the camera at half speed.
+            // A horizon tree line sits on the shore in front of it but behind the castles (order <= -500), across every map width.
+            // The lane is at y = -1.7, and the unit buttons cover everything below y = -2.9.
+            const int SkyOrder = -985, FarRow = -720, NearRow = -700;
+            var skies = new Sprite[4];
+            for (int i = 0; i < 4; i++) skies[i] = PrepareProp(SkyArt + $"sky_ch{i + 1}.png", true);
+            for (int i = 0; i < 4; i++)
+            {
+                if (skies[i] == null) continue;
+                var sky = ThemeProp(theme.looks[i].set.transform, "Sky", skies[i], 0f, 0.6f, 1f, Color.white, SkyOrder);
+                sky.AddComponent<SkyParallax>().factor = 0.5f;
+            }
 
-            // ---------- Chapter 1: Dark Forest (dusk, dense pines, purple mist, fireflies, eyes in the bushes) ----------
+            // ---------- Chapter 1: Dark Forest (night sky, two dark pine rows, purple mist, fireflies, eyes in the bushes) ----------
             {
                 var L = theme.looks[0];
                 Transform t = L.set.transform;
@@ -1009,87 +1017,89 @@ namespace TinySwordsBattle.EditorTools
                 Color pineTint = new Color(0.50f, 0.62f, 0.68f);
                 Color farTint = new Color(0.38f, 0.48f, 0.58f);
                 var rnd = new System.Random(7);
-                for (int i = 0; i < 12; i++)
-                {
-                    float x = -3.2f + i * 0.85f + (float)(rnd.NextDouble() * 0.3 - 0.15);
-                    float y = 0.55f + (float)(rnd.NextDouble() * 0.06);
-                    ThemeAnim(t, "Far Pine", i % 2 == 0 ? pine2 : pine1, x, y, 0.62f + (float)rnd.NextDouble() * 0.1f, farTint, 7f, Mathf.RoundToInt(-y * 100f) - 20);
-                }
-                for (int i = 0; i < 9; i++)
-                {
-                    float x = -2.8f + i * 1.1f + (float)(rnd.NextDouble() * 0.4 - 0.2);
-                    float y = 0.25f + (float)(rnd.NextDouble() * 0.15);
-                    ThemeAnim(t, "Pine", i % 2 == 0 ? pine1 : pine2, x, y, 0.72f + (float)rnd.NextDouble() * 0.1f, pineTint, 8f);
-                }
-                Vector2[] bushSpots = { new Vector2(-2.4f, 0.0f), new Vector2(1.3f, -0.05f), new Vector2(4.4f, 0.05f) };
+                for (float x = -17f; x <= 17f; x += 0.7f)
+                    ThemeAnim(t, "Far Pine", rnd.Next(2) == 0 ? pine1 : pine2, x + (float)(rnd.NextDouble() * 0.4 - 0.2), 0.62f,
+                        0.62f + (float)rnd.NextDouble() * 0.08f, farTint, 7f, FarRow);
+                for (float x = -17f; x <= 17f; x += 1.0f)
+                    ThemeAnim(t, "Pine", rnd.Next(2) == 0 ? pine1 : pine2, x + (float)(rnd.NextDouble() * 0.6 - 0.3), 0.35f,
+                        0.72f + (float)rnd.NextDouble() * 0.08f, pineTint, 8f, NearRow);
+                Vector2[] bushSpots = { new Vector2(-2.4f, -0.1f), new Vector2(1.3f, -0.15f), new Vector2(4.4f, -0.05f) };
                 var eyes = new List<Vector2>();
                 for (int i = 0; i < bushSpots.Length; i++)
                 {
-                    var b = ThemeAnim(t, "Dark Bush", i % 2 == 0 ? bush : bush2, bushSpots[i].x, bushSpots[i].y, 0.8f, new Color(0.40f, 0.50f, 0.55f), 6f);
+                    ThemeAnim(t, "Dark Bush", i % 2 == 0 ? bush : bush2, bushSpots[i].x, bushSpots[i].y, 0.8f, new Color(0.40f, 0.50f, 0.55f), 6f);
                     float cy = bushSpots[i].y + 0.45f;
-                    eyes.Add(new Vector2(bushSpots[i].x - 0.1f, cy));
-                    eyes.Add(new Vector2(bushSpots[i].x + 0.1f, cy));
+                    eyes.Add(new Vector2(bushSpots[i].x - 0.12f, cy));
+                    eyes.Add(new Vector2(bushSpots[i].x + 0.12f, cy));
                 }
                 ThemeMotes(t, "Eyes", AmbientMotes.Kind.Eyes, 0, Vector2.zero, Vector2.zero, new Color(1f, 0.92f, 0.35f),
-                    new Vector2(0.09f, 0.07f), 10, Vector2.zero, 1f, spots: eyes.ToArray());
-                ThemeMotes(t, "Mist (back)", AmbientMotes.Kind.Drift, 8, new Vector2(-15f, -0.4f), new Vector2(15f, 0.5f),
-                    new Color(0.62f, 0.48f, 0.82f), new Vector2(5f, 1.3f), 40, new Vector2(0.18f, 0f), 0.30f, seed: 3);
-                ThemeMotes(t, "Mist (lane)", AmbientMotes.Kind.Drift, 7, new Vector2(-15f, -2.9f), new Vector2(15f, -2.1f),
-                    new Color(0.62f, 0.48f, 0.82f), new Vector2(5f, 1.0f), 40, new Vector2(-0.12f, 0f), 0.22f, seed: 4);
+                    new Vector2(0.13f, 0.1f), 10, Vector2.zero, 1f, spots: eyes.ToArray());
+                ThemeMotes(t, "Mist (back)", AmbientMotes.Kind.Drift, 8, new Vector2(-17f, -0.4f), new Vector2(17f, 0.5f),
+                    new Color(0.62f, 0.48f, 0.82f), new Vector2(5f, 1.3f), 40, new Vector2(0.18f, 0f), 0.42f, seed: 3);
+                ThemeMotes(t, "Mist (lane)", AmbientMotes.Kind.Drift, 7, new Vector2(-17f, -2.9f), new Vector2(17f, -2.1f),
+                    new Color(0.62f, 0.48f, 0.82f), new Vector2(5f, 1.0f), 40, new Vector2(-0.12f, 0f), 0.32f, seed: 4);
                 ThemeMotes(t, "Fireflies", AmbientMotes.Kind.Firefly, 16, new Vector2(-9f, -2.8f), new Vector2(9f, 1.6f),
                     new Color(0.85f, 1f, 0.45f), new Vector2(0.16f, 0.16f), 60, Vector2.zero, 0.95f, seed: 5);
             }
 
-            // ---------- Chapter 2: Bamboo Hills (bright day, swaying bamboo, sheep, drifting clouds) ----------
+            // ---------- Chapter 2: Bamboo Hills (clear sky, swaying bamboo line with autumn trees, sheep, cloud shadows) ----------
             {
                 var L = theme.looks[1];
                 Transform t = L.set.transform;
-                L.waterTint = new Color(0.86f, 0.96f, 1f);
                 var rnd = new System.Random(11);
-                float[] groves = { -2.9f, -0.6f, 1.6f, 3.9f, 5.9f };
-                foreach (float gx in groves)
+                for (float x = -17f; x <= 17f; x += 0.75f)
                 {
-                    int n = 2 + rnd.Next(2);
-                    for (int k = 0; k < n; k++)
+                    float jx = x + (float)(rnd.NextDouble() * 0.3 - 0.15);
+                    if (rnd.NextDouble() < 0.12)
                     {
-                        float x = gx + (k - (n - 1) / 2f) * 0.55f + (float)(rnd.NextDouble() * 0.2 - 0.1);
-                        float y = 0.5f - k % 2 * 0.12f;
-                        var b = ThemeProp(t, "Bamboo", bamboo[rnd.Next(bamboo.Length)], x, y, 0.85f + (float)rnd.NextDouble() * 0.15f, Color.white, int.MinValue, rnd.Next(2) == 0);
-                        var sway = b.AddComponent<PropSway>();
-                        sway.angle = 1.8f;
-                        sway.speed = 0.8f + (float)rnd.NextDouble() * 0.4f;
+                        ThemeAnim(t, "Autumn Tree", rnd.Next(2) == 0 ? round3 : round4, jx, 0.5f, 0.68f, Color.white, 8f, NearRow + 5);
+                        continue;
                     }
+                    float y = 0.55f - (float)rnd.NextDouble() * 0.1f;
+                    var b = ThemeProp(t, "Bamboo", bamboo[rnd.Next(bamboo.Length)], jx, y, 0.5f + (float)rnd.NextDouble() * 0.1f,
+                        Color.white, NearRow + Mathf.RoundToInt((0.6f - y) * 100f), rnd.Next(2) == 0);
+                    var sway = b.AddComponent<PropSway>();
+                    sway.angle = 1.8f;
+                    sway.speed = 0.8f + (float)rnd.NextDouble() * 0.4f;
                 }
-                ThemeAnim(t, "Autumn Tree", round3, 0.5f, 0.2f, 0.7f, Color.white, 8f);
-                ThemeAnim(t, "Autumn Tree", round4, 5.0f, 0.15f, 0.7f, Color.white, 8f);
-                ThemeAnim(t, "Sheep", sheep, -1.7f, -0.05f, 0.75f, Color.white, 8f, int.MinValue, false, 1f, 4f);
+                ThemeAnim(t, "Sheep", sheep, -1.7f, -0.1f, 0.75f, Color.white, 8f, int.MinValue, false, 1f, 4f);
                 ThemeAnim(t, "Sheep", sheep, 2.7f, 0.0f, 0.75f, Color.white, 8f, int.MinValue, true, 1f, 4f);
-                ThemeAnim(t, "Sheep", sheep, 3.4f, -0.2f, 0.7f, Color.white, 8f, int.MinValue, false, 2f, 5f);
-                ThemeMotes(t, "Clouds", AmbientMotes.Kind.Drift, 5, new Vector2(-18f, 2.3f), new Vector2(18f, 4.4f),
-                    Color.white, new Vector2(0.6f, 0.6f), -975, new Vector2(0.15f, 0f), 1f, clouds.ToArray(), seed: 12);
+                ThemeAnim(t, "Sheep", sheep, 3.4f, -0.25f, 0.7f, Color.white, 8f, int.MinValue, false, 2f, 5f);
+                ThemeMotes(t, "Clouds", AmbientMotes.Kind.Drift, 3, new Vector2(-18f, 3.6f), new Vector2(18f, 4.8f),
+                    Color.white, new Vector2(0.5f, 0.5f), -980, new Vector2(0.12f, 0f), 1f, clouds.ToArray(), seed: 12);
                 ThemeMotes(t, "Cloud Shadows", AmbientMotes.Kind.Drift, 4, new Vector2(-18f, -2.6f), new Vector2(18f, 0.2f),
                     new Color(0.1f, 0.2f, 0.1f), new Vector2(7f, 2.6f), -505, new Vector2(0.15f, 0f), 0.10f, seed: 13);
             }
 
-            // ---------- Chapter 3: Shore Canyon (sea cliffs, bobbing rocks, splashing waves, a rubber duck) ----------
+            // ---------- Chapter 3: Shore Canyon (sea and cliffs in the sky picture, tree line with two gaps onto the sea) ----------
             {
                 var L = theme.looks[2];
                 Transform t = L.set.transform;
-                ThemeProp(t, "Sea Cliff", cliffA, -4.6f, 1.45f, 0.72f, Color.white, -980);
-                ThemeProp(t, "Sea Cliff", cliffB, 4.3f, 1.7f, 0.68f, Color.white, -980);
-                ThemeProp(t, "Far Cliff", cliffB, 0.2f, 2.9f, 0.48f, new Color(0.80f, 0.90f, 0.92f), -985, true);
-                ThemeAnim(t, "Sea Rock", waterRocks1, -1.6f, 1.2f, 1f, Color.white, 6f, -978);
-                ThemeAnim(t, "Sea Rock", waterRocks2, 2.0f, 1.35f, 1f, Color.white, 6f, -978);
-                ThemeAnim(t, "Sea Rock", waterRocks1, 7.2f, 3.6f, 0.9f, Color.white, 6f, -978);
-                ThemeAnim(t, "Sea Rock", waterRocks2, -7.5f, 3.2f, 0.9f, Color.white, 6f, -978);
-                Vector2[] splashes = { new Vector2(-5.6f, 1.35f), new Vector2(-3.4f, 1.35f), new Vector2(3.6f, 1.6f), new Vector2(5.0f, 1.6f), new Vector2(-1.6f, 1.1f), new Vector2(2.0f, 1.25f) };
-                foreach (var sp in splashes)
-                    ThemeAnim(t, "Splash", splash, sp.x, sp.y, 0.55f, Color.white, 12f, -976, false, 2f, 6f, true);
-                var d = ThemeAnim(t, "Rubber Duck", duck, 0.9f, 1.05f, 0.9f, Color.white, 4f, -977);
+                L.waterTint = new Color(0.62f, 0.82f, 1f);
+                var rnd = new System.Random(31);
+                Vector2[] gaps = { new Vector2(-6.5f, -3.5f), new Vector2(0.5f, 3.6f) };
+                Sprite[][] mix = { pine1, pine2, round3, round4 };
+                for (float x = -17f; x <= 17f; x += 0.85f)
+                {
+                    bool inGap = false;
+                    foreach (var g in gaps) if (x > g.x && x < g.y) inGap = true;
+                    if (inGap) continue;
+                    ThemeAnim(t, "Shore Tree", mix[rnd.Next(mix.Length)], x + (float)(rnd.NextDouble() * 0.4 - 0.2),
+                        0.45f + (float)rnd.NextDouble() * 0.12f, 0.7f, Color.white, 8f, NearRow);
+                }
+                Sprite rock1 = LoadSprite(TS + "/Terrain/Decorations/Rocks/Rock1.png"), rock3 = LoadSprite(TS + "/Terrain/Decorations/Rocks/Rock3.png");
+                foreach (var g in gaps)
+                {
+                    ThemeProp(t, "Shore Rock", rock1, g.x + 0.6f, 0.45f, 1f, Color.white, NearRow + 10);
+                    ThemeProp(t, "Shore Rock", rock3, g.y - 0.7f, 0.5f, 1f, Color.white, NearRow + 10);
+                    ThemeAnim(t, "Splash", splash, (g.x + g.y) / 2f - 0.6f, 0.75f, 0.55f, Color.white, 12f, SkyOrder + 5, false, 2f, 6f, true);
+                    ThemeAnim(t, "Splash", splash, (g.x + g.y) / 2f + 0.7f, 0.85f, 0.5f, Color.white, 12f, SkyOrder + 5, false, 3f, 7f, true);
+                }
+                var d = ThemeAnim(t, "Rubber Duck", duck, 2.4f, 0.95f, 0.9f, Color.white, 4f, SkyOrder + 6);
                 if (d != null) { var bob = d.AddComponent<PropSway>(); bob.angle = 4f; bob.bob = 0.04f; bob.speed = 1.5f; }
             }
 
-            // ---------- Chapter 4: Troll Lands (ruins on fire, dead trees, embers, smoky haze) ----------
+            // ---------- Chapter 4: Troll Lands (red dusk with the troll castle, dead trees, burning ruins, embers) ----------
             {
                 var L = theme.looks[3];
                 Transform t = L.set.transform;
@@ -1099,24 +1109,23 @@ namespace TinySwordsBattle.EditorTools
                 L.vignette = new Color(0.14f, 0.02f, 0.04f, 0.6f);
                 Color ruinTint = new Color(0.62f, 0.56f, 0.64f);
                 Color deadTint = new Color(0.40f, 0.36f, 0.40f);
-                ThemeProp(t, "Ruin", LoadSprite(black + "House1.png"), -2.7f, 0.45f, 0.75f, ruinTint);
-                ThemeProp(t, "Ruin", LoadSprite(black + "Tower.png"), 0.4f, 0.5f, 0.6f, ruinTint);
-                ThemeProp(t, "Ruin", LoadSprite(black + "House3.png"), 3.2f, 0.45f, 0.75f, ruinTint);
-                ThemeProp(t, "Ruin", LoadSprite(black + "House2.png"), 5.7f, 0.5f, 0.68f, ruinTint, int.MinValue, true);
-                ThemeAnim(t, "Fire", fire1, -2.9f, 1.25f, 0.9f, Color.white, 10f, 20);
-                ThemeAnim(t, "Fire", fire3, 0.5f, 2.1f, 0.8f, Color.white, 10f, 20);
-                ThemeAnim(t, "Fire", fire2, 3.4f, 1.2f, 0.9f, Color.white, 10f, 20);
-                ThemeAnim(t, "Fire", fire1, 1.9f, 0.05f, 0.8f, Color.white, 10f);
                 var rnd = new System.Random(21);
-                float[] deadX = { -1.4f, 1.9f, 4.6f };
-                for (int i = 0; i < deadX.Length; i++)
+                for (float x = -17f; x <= 17f; x += 1.2f)
                 {
-                    var frames = i % 2 == 0 ? pine1 : pine2;
-                    if (frames.Length > 0) ThemeProp(t, "Dead Tree", frames[0], deadX[i], 0.2f, 0.68f, deadTint);
+                    var frames = rnd.Next(2) == 0 ? pine1 : pine2;
+                    if (frames.Length > 0)
+                        ThemeProp(t, "Dead Tree", frames[0], x + (float)(rnd.NextDouble() * 0.6 - 0.3), 0.5f + (float)rnd.NextDouble() * 0.1f, 0.66f, deadTint, FarRow);
                 }
+                ThemeProp(t, "Ruin", LoadSprite(black + "House1.png"), -2.7f, 0.3f, 0.75f, ruinTint, NearRow);
+                ThemeProp(t, "Ruin", LoadSprite(black + "House3.png"), 3.2f, 0.3f, 0.75f, ruinTint, NearRow);
+                ThemeProp(t, "Ruin", LoadSprite(black + "House2.png"), 6.0f, 0.35f, 0.68f, ruinTint, NearRow, true);
+                ThemeAnim(t, "Fire", fire1, -2.9f, 1.0f, 1.3f, Color.white, 10f, NearRow + 10);
+                ThemeAnim(t, "Fire", fire2, 3.4f, 0.95f, 1.3f, Color.white, 10f, NearRow + 10);
+                ThemeAnim(t, "Fire", fire3, 5.8f, 1.0f, 1.1f, Color.white, 10f, NearRow + 10);
+                ThemeAnim(t, "Fire", fire1, 1.9f, -0.05f, 1.2f, Color.white, 10f);
                 for (int i = 1; i <= 3; i++)
-                    ThemeProp(t, "Stump", LoadSprite(trees + $"Stump {i}.png"), -3.4f + i * 2.6f, -0.1f + (i % 2) * 0.15f, 0.7f, deadTint);
-                ThemeMotes(t, "Haze", AmbientMotes.Kind.Drift, 7, new Vector2(-15f, -0.3f), new Vector2(15f, 1.2f),
+                    ThemeProp(t, "Stump", LoadSprite(trees + $"Stump {i}.png"), -3.4f + i * 2.6f, -0.2f + (i % 2) * 0.12f, 0.7f, deadTint);
+                ThemeMotes(t, "Haze", AmbientMotes.Kind.Drift, 7, new Vector2(-17f, -0.3f), new Vector2(17f, 1.2f),
                     new Color(0.22f, 0.18f, 0.24f), new Vector2(5f, 1.5f), 40, new Vector2(0.1f, 0f), 0.30f, seed: 22);
                 ThemeMotes(t, "Embers", AmbientMotes.Kind.Ember, 20, new Vector2(-9f, -2.8f), new Vector2(9f, 4f),
                     new Color(1f, 0.55f, 0.18f), new Vector2(0.1f, 0.1f), 60, new Vector2(0f, 0.6f), 0.9f, seed: 23);
