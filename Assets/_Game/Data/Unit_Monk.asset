@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1f257c2aec34a51b7f5afd48744281, type: 3}
+  m_Name: Unit_Monk
+  m_EditorClassIdentifier: Assembly-CSharp::TinySwordsBattle.UnitData
+  type: 4
+  displayName: Monk
+  cost: 70
+  maxHp: 60
+  attack: 14
+  attackRange: 3.5
+  attackInterval: 2.2
+  moveSpeed: 0.9
+  spawnCooldown: 6
+  hasCounter: 0
+  strongAgainst: 0
+  counterMultiplier: 1.5
+  isRanged: 0
+  skillRadius: 1.8
+  healAmount: 14
+  scale: 1
+  isBoss: 0
+  isCursedAnimal: 0
+  barHeight: 0.8
+  projectileSprite: {fileID: 0}
+  playerController: {fileID: 9100000, guid: c4c4420f7d43c4cd595c17f6eb6fbb6f, type: 2}
+  enemyController: {fileID: 9100000, guid: fc060b4dbf5694affb0b1740c6611a55, type: 2}
+  icon: {fileID: 4723107735738678597, guid: 7ba4178767e424c47b91888898a1fdc4, type: 3}

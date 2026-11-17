@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1f257c2aec34a51b7f5afd48744281, type: 3}
+  m_Name: Enemy_Gnoll
+  m_EditorClassIdentifier: Assembly-CSharp::TinySwordsBattle.UnitData
+  type: 1
+  displayName: Gnoll
+  cost: 50
+  maxHp: 70
+  attack: 18
+  attackRange: 4.5
+  attackInterval: 1.5
+  moveSpeed: 1.1
+  spawnCooldown: 3
+  hasCounter: 0
+  strongAgainst: 0
+  counterMultiplier: 1.5
+  isRanged: 1
+  skillRadius: 1.8
+  healAmount: 0
+  scale: 1
+  isBoss: 0
+  isCursedAnimal: 0
+  barHeight: 0.68125
+  projectileSprite: {fileID: 698133035849569799, guid: 1dbbfac9d392faa5f166ad82055a85ca, type: 3}
+  playerController: {fileID: 9100000, guid: e44623cafe4894a86ad46b4967234419, type: 2}
+  enemyController: {fileID: 9100000, guid: e44623cafe4894a86ad46b4967234419, type: 2}
+  icon: {fileID: 164383953202790977, guid: 3e5a4f7e40cb727a7e3a7f45b6fc6f71, type: 3}

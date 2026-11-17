@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1f257c2aec34a51b7f5afd48744281, type: 3}
+  m_Name: Enemy_PaddleShark
+  m_EditorClassIdentifier: Assembly-CSharp::TinySwordsBattle.UnitData
+  type: 1
+  displayName: Paddle Shark
+  cost: 35
+  maxHp: 110
+  attack: 16
+  attackRange: 0.9
+  attackInterval: 1
+  moveSpeed: 1.2
+  spawnCooldown: 2
+  hasCounter: 0
+  strongAgainst: 0
+  counterMultiplier: 1.5
+  isRanged: 0
+  skillRadius: 1.8
+  healAmount: 0
+  scale: 1
+  isBoss: 0
+  isCursedAnimal: 0
+  barHeight: 0.65
+  projectileSprite: {fileID: 0}
+  playerController: {fileID: 9100000, guid: 6e1681603a1444facab22710f3d4baa9, type: 2}
+  enemyController: {fileID: 9100000, guid: 6e1681603a1444facab22710f3d4baa9, type: 2}
+  icon: {fileID: 745187229865956657, guid: f38e044fc9a9521ebd6b5ce2cd478781, type: 3}

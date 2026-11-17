@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1f257c2aec34a51b7f5afd48744281, type: 3}
+  m_Name: Enemy_HarpoonShark
+  m_EditorClassIdentifier: Assembly-CSharp::TinySwordsBattle.UnitData
+  type: 1
+  displayName: Harpoon Shark
+  cost: 50
+  maxHp: 70
+  attack: 16
+  attackRange: 4.5
+  attackInterval: 1.5
+  moveSpeed: 1.1
+  spawnCooldown: 3
+  hasCounter: 0
+  strongAgainst: 0
+  counterMultiplier: 1.5
+  isRanged: 1
+  skillRadius: 1.8
+  healAmount: 0
+  scale: 1
+  isBoss: 0
+  isCursedAnimal: 0
+  barHeight: 0.74375
+  projectileSprite: {fileID: 351998787615875834, guid: 1ef83cfddc48e2135b21772c68619521, type: 3}
+  playerController: {fileID: 9100000, guid: 1c1fafa4eb27e4566a4ccab9e4cda9ba, type: 2}
+  enemyController: {fileID: 9100000, guid: 1c1fafa4eb27e4566a4ccab9e4cda9ba, type: 2}
+  icon: {fileID: 932594889608026628, guid: eb673bf18989670a9f84fe5912bbf59d, type: 3}

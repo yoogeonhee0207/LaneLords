@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1f257c2aec34a51b7f5afd48744281, type: 3}
+  m_Name: Enemy_Troll
+  m_EditorClassIdentifier: Assembly-CSharp::TinySwordsBattle.UnitData
+  type: 1
+  displayName: Troll
+  cost: 150
+  maxHp: 3600
+  attack: 65
+  attackRange: 1.5
+  attackInterval: 2
+  moveSpeed: 0.25
+  spawnCooldown: 0
+  hasCounter: 0
+  strongAgainst: 0
+  counterMultiplier: 1.5
+  isRanged: 0
+  skillRadius: 1.8
+  healAmount: 0
+  scale: 1
+  isBoss: 1
+  isCursedAnimal: 0
+  barHeight: 2.80625
+  projectileSprite: {fileID: 0}
+  playerController: {fileID: 9100000, guid: b4ec3a1e03bdd4d8ab961de4dcdc6a6c, type: 2}
+  enemyController: {fileID: 9100000, guid: b4ec3a1e03bdd4d8ab961de4dcdc6a6c, type: 2}
+  icon: {fileID: 597591946832939042, guid: 1a1e6064ad093c681d1a14db9b2ccae6, type: 3}

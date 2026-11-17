@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1f257c2aec34a51b7f5afd48744281, type: 3}
+  m_Name: Enemy_Thief
+  m_EditorClassIdentifier: Assembly-CSharp::TinySwordsBattle.UnitData
+  type: 1
+  displayName: Thief
+  cost: 45
+  maxHp: 75
+  attack: 26
+  attackRange: 0.9
+  attackInterval: 1
+  moveSpeed: 1.7
+  spawnCooldown: 3
+  hasCounter: 0
+  strongAgainst: 0
+  counterMultiplier: 1.5
+  isRanged: 0
+  skillRadius: 1.8
+  healAmount: 0
+  scale: 1
+  isBoss: 0
+  isCursedAnimal: 0
+  barHeight: 0.696875
+  projectileSprite: {fileID: 0}
+  playerController: {fileID: 9100000, guid: e3d983d7f276b479b832459ee76334fa, type: 2}
+  enemyController: {fileID: 9100000, guid: e3d983d7f276b479b832459ee76334fa, type: 2}
+  icon: {fileID: 310220035550543705, guid: 4458c5d08061be48f7bf972a77fce778, type: 3}

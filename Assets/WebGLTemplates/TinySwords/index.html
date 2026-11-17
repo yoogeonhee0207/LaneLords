@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>{{{ PRODUCT_NAME }}}</title>
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #2b2b2b; }
+    body { position: fixed; inset: 0; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+    #unity-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; background: #47aba9; outline: none; }
+    #loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: #47aba9 url('TemplateData/bg.jpg') center / cover no-repeat; image-rendering: pixelated; z-index: 2;
+      font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-weight: 800; color: #fff; }
+    #loading::before { content: ""; position: absolute; inset: 0; background: rgba(20, 24, 40, 0.45); }
+    #title { position: relative; font-size: min(7vw, 64px); letter-spacing: 1px; color: #ffe68c;
+      text-shadow: 4px 4px 0 #3b2a1e, -2px -2px 0 #3b2a1e, 2px -2px 0 #3b2a1e, -2px 2px 0 #3b2a1e; margin-bottom: 4vh; text-align: center; padding: 0 4vw; }
+    #bar { position: relative; width: min(60vw, 520px); height: 28px; background: #3b2a1e; border: 4px solid #3b2a1e; box-shadow: 0 0 0 4px #e8d9b0; }
+    #fill { width: 0%; height: 100%; background: repeating-linear-gradient(90deg, #ffd34d 0 18px, #f2b632 18px 22px); transition: width 0.2s; }
+    #pct { position: relative; margin-top: 2vh; font-size: 22px; text-shadow: 2px 2px 0 #000; }
+    #rotate { position: absolute; inset: 0; display: none; z-index: 3; background: #1d2333; color: #fff; align-items: center; justify-content: center;
+      flex-direction: column; font-family: -apple-system, "Apple SD Gothic Neo", sans-serif; font-weight: 800; font-size: 22px; text-align: center; }
+    #rotate .icon { font-size: 64px; margin-bottom: 16px; animation: spin 2s ease-in-out infinite; }
+    @keyframes spin { 0%, 30% { transform: rotate(0deg); } 60%, 100% { transform: rotate(90deg); } }
+    @media (orientation: portrait) and (max-width: 900px) { #rotate { display: flex; } }
+    #error { position: absolute; left: 0; right: 0; bottom: 8vh; color: #ffb4a8; font-size: 18px; text-align: center; z-index: 4; display: none; padding: 0 5vw; }
+  </style>
+</head>
+<body>
+  <canvas id="unity-canvas" tabindex="-1"></canvas>
+  <div id="loading">
+    <div id="title">{{{ PRODUCT_NAME }}}</div>
+    <div id="bar"><div id="fill"></div></div>
+    <div id="pct">0%</div>
+  </div>
+  <div id="rotate"><div class="icon">📱</div>화면을 가로로 돌려 주세요<br>Please rotate your device</div>
+  <div id="error"></div>
+  <script src="Build/{{{ LOADER_FILENAME }}}"></script>
+  <script>
+    var canvas = document.querySelector("#unity-canvas");
+    var fill = document.querySelector("#fill");
+    var pct = document.querySelector("#pct");
+    var mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    createUnityInstance(canvas, {
+      arguments: [],
+      dataUrl: "Build/{{{ DATA_FILENAME }}}",
+      frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+#if USE_THREADS
+      workerUrl: "Build/{{{ WORKER_FILENAME }}}",
+#endif
+#if USE_WASM
+      codeUrl: "Build/{{{ CODE_FILENAME }}}",
+#endif
+#if MEMORY_FILENAME
+      memoryUrl: "Build/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+      symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
+#endif
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+      productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+      productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+      devicePixelRatio: mobile ? Math.min(window.devicePixelRatio || 1, 2) : undefined,
+    }, function (progress) {
+      var p = Math.round(progress * 100);
+      fill.style.width = p + "%";
+      pct.textContent = p + "%";
+    }).then(function () {
+      document.querySelector("#loading").style.display = "none";
+    }).catch(function (message) {
+      var e = document.querySelector("#error");
+      e.style.display = "block";
+      e.textContent = "불러오지 못했어요: " + message;
+    });
+  </script>
+</body>
+</html>

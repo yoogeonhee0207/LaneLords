@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1f257c2aec34a51b7f5afd48744281, type: 3}
+  m_Name: Enemy_BombFish
+  m_EditorClassIdentifier: Assembly-CSharp::TinySwordsBattle.UnitData
+  type: 1
+  displayName: Bomb Fish
+  cost: 55
+  maxHp: 45
+  attack: 30
+  attackRange: 3.5
+  attackInterval: 2.2
+  moveSpeed: 1
+  spawnCooldown: 4
+  hasCounter: 0
+  strongAgainst: 0
+  counterMultiplier: 1.5
+  isRanged: 1
+  skillRadius: 1.8
+  healAmount: 0
+  scale: 1
+  isBoss: 0
+  isCursedAnimal: 0
+  barHeight: 0.6
+  projectileSprite: {fileID: 844024177473733332, guid: ad51cf1996f2160a850f06d0c7bceae6, type: 3}
+  playerController: {fileID: 9100000, guid: 38c1a707483da4e378f548faef23b318, type: 2}
+  enemyController: {fileID: 9100000, guid: 38c1a707483da4e378f548faef23b318, type: 2}
+  icon: {fileID: 1053962050243991314, guid: fcb74bc77239620ce25c27274a189696, type: 3}

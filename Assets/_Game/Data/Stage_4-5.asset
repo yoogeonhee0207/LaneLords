@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 617d837d6a69244ddba0a69aec4566bd, type: 3}
+  m_Name: Stage_4-5
+  m_EditorClassIdentifier: Assembly-CSharp::TinySwordsBattle.StageData
+  stageName: 4-5
+  terrainColor: 4
+  mapHalfWidth: 12.5
+  startGold: 0
+  baseIncome: 5
+  incomePerWorker: 1
+  maxWorkers: 5
+  playerCastleHp: 700
+  availableUnits: 0000000001000000i
+  enemyCastleHp: 4550
+  enemyIncome: 13.25
+  enemyStartGold: 0
+  enemyFirstSpawnDelay: 5
+  enemyStatMultiplier: 2.6
+  enemyIncomeStart: 0.8
+  enemyIncomeFullTime: 20
+  enemyIncomeMax: 1.8
+  enemyIncomeMaxTime: 90
+  enemyLateShift: 0.6
+  enemyUnits:
+  - unit: {fileID: 11400000, guid: 7d3680f60128545f1b40bda2e5ef908a, type: 2}
+    weight: 1
+  - unit: {fileID: 11400000, guid: 44c526da94dcb4da1ada6f2af1c32f0b, type: 2}
+    weight: 1
+  - unit: {fileID: 11400000, guid: 8afb74040d20a465c9d801d62ba40fdc, type: 2}
+    weight: 1
+  - unit: {fileID: 11400000, guid: 6658fcd24259f4b54b1a1060dc7e4b7b, type: 2}
+    weight: 1
+  - unit: {fileID: 11400000, guid: 503018b7351c5429da3ad675f0a1b24f, type: 2}
+    weight: 1
+  boss: {fileID: 0}
+  bossAtCastleHp: 0
+  bossDelay: 3
+  bossStatMultiplier: 0
