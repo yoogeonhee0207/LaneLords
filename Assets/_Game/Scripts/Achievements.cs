@@ -225,7 +225,24 @@ namespace TinySwordsBattle
 
         void OnApplicationPause(bool paused)
         {
-            if (paused) Achievements.SaveIfDirty();
+            if (paused) SaveAll();
+        }
+
+        // On the web the tab can be closed at any time: save whenever the game loses focus.
+        void OnApplicationFocus(bool focused)
+        {
+            if (!focused) SaveAll();
+        }
+
+        void OnApplicationQuit()
+        {
+            SaveAll();
+        }
+
+        static void SaveAll()
+        {
+            Achievements.SaveIfDirty();
+            PlayerPrefs.Save();
         }
 
         void Show(Achievements.Def a)

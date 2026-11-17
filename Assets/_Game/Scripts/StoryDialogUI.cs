@@ -70,6 +70,7 @@ namespace TinySwordsBattle
             string key = "story_in_" + name;
             if (PlayerPrefs.GetInt(key, 0) != 0 || !StoryScript.Intro.TryGetValue(name, out intro)) yield break;
             PlayerPrefs.SetInt(key, 1);
+            PlayerPrefs.Save();
 
             // First stage of a chapter: big title card first.
             if (name.EndsWith("-1"))
@@ -155,6 +156,7 @@ namespace TinySwordsBattle
             if (PlayerPrefs.GetInt(key, 0) == 0 && StoryScript.BossEntry.TryGetValue(stageName, out lines))
             {
                 PlayerPrefs.SetInt(key, 1);
+                PlayerPrefs.Save();
                 Play(lines, true); // resumes the battle when closed
             }
             else ResumeBattle();
@@ -177,6 +179,7 @@ namespace TinySwordsBattle
         {
             if (PlayerPrefs.GetInt("story_ending", 0) != 0) return false;
             PlayerPrefs.SetInt("story_ending", 1);
+            PlayerPrefs.Save();
             MusicPlayer.Play("bgm_ending");
             ShowBackdrop(endingBackdrop);
             Play(StoryScript.Ending, false);
@@ -224,6 +227,7 @@ namespace TinySwordsBattle
             string key = "story_out_" + stageName;
             if (PlayerPrefs.GetInt(key, 0) != 0 || !StoryScript.Outro.TryGetValue(stageName, out outro)) return false;
             PlayerPrefs.SetInt(key, 1);
+            PlayerPrefs.Save();
             Play(outro, false);
             return true;
         }

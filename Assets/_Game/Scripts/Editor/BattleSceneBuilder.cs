@@ -839,8 +839,8 @@ namespace TinySwordsBattle.EditorTools
                 EditorUtility.DisplayDialog("Lane Lords", "플레이를 멈춘 뒤에 다시 실행해 주세요.", "OK");
                 return;
             }
-            var theme = Object.FindFirstObjectByType<ChapterTheme>();
-            var terrain = Object.FindFirstObjectByType<TerrainTheme>();
+            var theme = Object.FindAnyObjectByType<ChapterTheme>();
+            var terrain = Object.FindAnyObjectByType<TerrainTheme>();
             if (theme == null)
             {
                 EditorUtility.DisplayDialog("Lane Lords", "Battle 씬에서 실행해 주세요. (없으면 먼저 Build Battle Scene)", "OK");
@@ -1110,12 +1110,10 @@ namespace TinySwordsBattle.EditorTools
                 Color ruinTint = new Color(0.62f, 0.56f, 0.64f);
                 Color deadTint = new Color(0.40f, 0.36f, 0.40f);
                 var rnd = new System.Random(21);
+                var deadTrees = new[] { PrepareProp(PropArt + "dead_tree_1.png", true), PrepareProp(PropArt + "dead_tree_2.png", true) };
                 for (float x = -17f; x <= 17f; x += 1.2f)
-                {
-                    var frames = rnd.Next(2) == 0 ? pine1 : pine2;
-                    if (frames.Length > 0)
-                        ThemeProp(t, "Dead Tree", frames[0], x + (float)(rnd.NextDouble() * 0.6 - 0.3), 0.5f + (float)rnd.NextDouble() * 0.1f, 0.66f, deadTint, FarRow);
-                }
+                    ThemeProp(t, "Dead Tree", deadTrees[rnd.Next(2)], x + (float)(rnd.NextDouble() * 0.6 - 0.3), 0.5f + (float)rnd.NextDouble() * 0.1f,
+                        0.66f + (float)rnd.NextDouble() * 0.08f, new Color(0.85f, 0.80f, 0.84f), FarRow);
                 ThemeProp(t, "Ruin", LoadSprite(black + "House1.png"), -2.7f, 0.3f, 0.75f, ruinTint, NearRow);
                 ThemeProp(t, "Ruin", LoadSprite(black + "House3.png"), 3.2f, 0.3f, 0.75f, ruinTint, NearRow);
                 ThemeProp(t, "Ruin", LoadSprite(black + "House2.png"), 6.0f, 0.35f, 0.68f, ruinTint, NearRow, true);
@@ -1132,7 +1130,7 @@ namespace TinySwordsBattle.EditorTools
             }
 
             theme.Apply(1);
-            var terrain = Object.FindFirstObjectByType<TerrainTheme>();
+            var terrain = Object.FindAnyObjectByType<TerrainTheme>();
             if (terrain != null) terrain.Recolor(TerrainColorFor(1));
         }
 

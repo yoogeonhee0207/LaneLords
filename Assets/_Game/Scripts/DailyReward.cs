@@ -113,8 +113,9 @@ namespace TinySwordsBattle
 
         public static void RefreshGems()
         {
-            foreach (var shop in UnityEngine.Object.FindObjectsByType<UpgradeShopUI>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-                shop.Refresh();
+            // includes inactive shops; skip anything that isn't in a loaded scene
+            foreach (var shop in Resources.FindObjectsOfTypeAll<UpgradeShopUI>())
+                if (shop != null && shop.gameObject.scene.IsValid()) shop.Refresh();
         }
     }
 }

@@ -64,7 +64,7 @@ namespace TinySwordsBattle.EditorTools
 
         static void ApplyPlayerSettings()
         {
-            PlayerSettings.companyName = "TinySwordsBattle";
+            PlayerSettings.companyName = "LaneLords";
             PlayerSettings.productName = "Lane Lords";
             PlayerSettings.defaultWebScreenWidth = 1280;
             PlayerSettings.defaultWebScreenHeight = 720;
@@ -80,7 +80,7 @@ namespace TinySwordsBattle.EditorTools
             PlayerSettings.SetManagedStrippingLevel(UnityEditor.Build.NamedBuildTarget.WebGL, ManagedStrippingLevel.Low);
         }
 
-        /// <summary>Vorbis compression for all game audio: music at 50% quality, effects at 40% and mono.</summary>
+        /// <summary>Vorbis compression for all game audio: 30% quality, music at 32 kHz stereo, effects at 22 kHz mono.</summary>
         static void ShrinkAudio()
         {
             foreach (var guid in AssetDatabase.FindAssets("t:AudioClip", new[] { "Assets/_Game/Resources" }))
@@ -90,12 +90,17 @@ namespace TinySwordsBattle.EditorTools
                 if (importer == null) continue;
                 bool music = path.Contains("/BGM/");
                 var s = importer.defaultSampleSettings;
-                float quality = music ? 0.5f : 0.4f;
+                // Audio is most of the download: music 0.3 at 32 kHz stereo, effects 0.3 at 22 kHz mono.
+                float quality = 0.3f;
+                uint rate = music ? 32000u : 22050u;
                 bool changed = s.compressionFormat != AudioCompressionFormat.Vorbis || !Mathf.Approximately(s.quality, quality)
-                               || importer.forceToMono == music;
+                               || importer.forceToMono == music || s.sampleRateSetting != AudioSampleRateSetting.OverrideSampleRate
+                               || s.sampleRateOverride != rate;
                 if (!changed) continue;
                 s.compressionFormat = AudioCompressionFormat.Vorbis;
                 s.quality = quality;
+                s.sampleRateSetting = AudioSampleRateSetting.OverrideSampleRate;
+                s.sampleRateOverride = rate;
                 s.loadType = music ? AudioClipLoadType.CompressedInMemory : AudioClipLoadType.DecompressOnLoad;
                 importer.defaultSampleSettings = s;
                 importer.forceToMono = !music;

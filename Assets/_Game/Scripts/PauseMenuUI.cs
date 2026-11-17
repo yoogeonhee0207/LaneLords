@@ -37,7 +37,6 @@ namespace TinySwordsBattle
             Time.timeScale = 0f;
             bm.IsPaused = true;
             RefreshLabels();
-            Sfx.Play("ui_pause");
             if (panel != null) panel.SetActive(true);
         }
 
@@ -46,7 +45,6 @@ namespace TinySwordsBattle
             var bm = BattleManager.Instance;
             if (bm != null) bm.IsPaused = false;
             Time.timeScale = speedBeforePause;
-            if (panel != null && panel.activeSelf) Sfx.Play("ui_unpause");
             if (panel != null) panel.SetActive(false);
         }
 
