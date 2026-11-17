@@ -36,7 +36,8 @@ namespace TinySwordsBattle
             }
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        // After the first scene: the SDK creates its own GameObject during Init.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void Init()
         {
 #if CRAZY_SDK
