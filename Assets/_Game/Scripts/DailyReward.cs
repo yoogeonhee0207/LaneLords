@@ -91,18 +91,30 @@ namespace TinySwordsBattle
                 if (done) UIKit.Txt(box, "Check", Loc.T("DONE", "완료"), 34, TextAnchor.MiddleCenter, new Vector2(0f, -70f), new Vector2(boxW, 50f)).color = new Color(0.4f, 1f, 0.5f);
             }
 
+            // With a rewarded ad available, CLAIM sits on the left and "watch an ad for double" on the right.
+            bool offerAd = canClaim && Ads.RewardedAvailable;
             var claim = UIKit.Btn(paper, "Claim", canClaim ? Loc.T("CLAIM", "받기") : Loc.T("Come back tomorrow", "내일 또 오세요"),
-                new Vector2(0f, -170f), new Vector2(canClaim ? 300f : 460f, 90f), false, null, 38, null);
+                new Vector2(offerAd ? -220f : 0f, -170f), new Vector2(canClaim ? 300f : 460f, 90f), false, null, 38, null);
             claim.interactable = canClaim;
-            claim.onClick.AddListener(() =>
+            claim.onClick.AddListener(() => ClaimAndRefresh(false));
+
+            if (offerAd)
             {
-                int gems = Claim();
-                if (gems <= 0) return;
-                Sfx.Play("gem");
-                RefreshGems();
-                Close();
-                Open(); // reopen to show the check mark
-            });
+                var ad = UIKit.Btn(paper, "Claim x2", Loc.T("WATCH AD: x2", "광고 보고 2배"),
+                    new Vector2(200f, -170f), new Vector2(400f, 90f), true, null, 36, null);
+                ad.onClick.AddListener(() => Ads.Rewarded(() => ClaimAndRefresh(true)));
+            }
+        }
+
+        static void ClaimAndRefresh(bool doubled)
+        {
+            int gems = Claim();
+            if (gems <= 0) return;
+            if (doubled) SaveManager.AddGems(gems); // the ad pays the same amount again
+            Sfx.Play("gem");
+            RefreshGems();
+            Close();
+            Open(); // reopen to show the check mark
         }
 
         public static void Close()

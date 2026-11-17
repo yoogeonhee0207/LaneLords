@@ -48,6 +48,13 @@ namespace TinySwordsBattle
         public GameObject nextStageButton;
         [Tooltip("Yellow line under the result: new unit unlockable / shop hint")]
         public Text resultNotice;
+        [Tooltip("Win screen: watch a rewarded ad for double gems")]
+        public GameObject doubleGemsButton;
+        public Text doubleGemsLabel;
+
+        int lastRewardGems;
+        bool resultShown;
+        bool watchedRewarded;
 
         public bool IsRunning { get; private set; }
         /// <summary>True while the pause menu is open.</summary>
@@ -86,6 +93,7 @@ namespace TinySwordsBattle
             waves.Init(stage);
             if (resultPanel != null) resultPanel.SetActive(false);
             IsRunning = true;
+            Ads.GameplayStart();
         }
 
         /// <summary>The scene is built for chapter 1 (castles at x = +-9.5). Later chapters push the castles apart.</summary>
@@ -248,6 +256,8 @@ namespace TinySwordsBattle
 
         IEnumerator ShowResult(bool win)
         {
+            Ads.GameplayStop();
+            lastRewardGems = 0;
             MusicPlayer.PlayJingle(win ? "jingle_win" : "jingle_lose");
             yield return new WaitForSeconds(1.5f);
 
@@ -281,6 +291,7 @@ namespace TinySwordsBattle
                 var newUnits = UnitProgress.UnlockedBy(stage.stageName);
                 int gems = stars * 10 + (firstClear ? 20 : 0); // first clear bonus
                 SaveManager.AddGems(gems);
+                lastRewardGems = gems;
                 if (gems > 0) Sfx.Play("gem");
                 SaveManager.SaveStars(stage.stageName, stars);
                 resultText.text = Loc.T($"Stars {stars} / 3   Time {ElapsedTime:0}s\n+{gems} Gems" + (firstClear ? " (first clear!)" : ""),
@@ -306,7 +317,41 @@ namespace TinySwordsBattle
                 if (resultNotice != null) resultNotice.text = Loc.T("Train units and upgrade your castle in the SHOP.", "상점에서 유닛 강화와 성 업그레이드를 할 수 있어요.");
             }
             if (nextStageButton != null) nextStageButton.SetActive(win && NextStageIndex() >= 0);
+            if (doubleGemsButton != null)
+            {
+                bool offer = win && lastRewardGems > 0 && Ads.RewardedAvailable;
+                doubleGemsButton.SetActive(offer);
+                if (offer && doubleGemsLabel != null)
+                    doubleGemsLabel.text = Loc.T($"WATCH AD: +{lastRewardGems} GEMS", $"광고 보고 보석 +{lastRewardGems}");
+            }
             if (resultPanel != null) resultPanel.SetActive(true);
+            resultShown = true;
+        }
+
+        /// <summary>Win screen button: watch a rewarded ad to get the stage's gems a second time.</summary>
+        public void WatchDoubleGems()
+        {
+            if (watchedRewarded || lastRewardGems <= 0) return;
+            Ads.Rewarded(() =>
+            {
+                watchedRewarded = true;
+                SaveManager.AddGems(lastRewardGems);
+                Sfx.Play("gem");
+                if (doubleGemsButton != null) doubleGemsButton.SetActive(false);
+                if (resultNotice != null)
+                    resultNotice.text = Loc.T($"Bonus! +{lastRewardGems} gems (x2)", $"보너스! 보석 +{lastRewardGems} (2배)");
+            });
+        }
+
+        /// <summary>
+        /// Leaving the result screen is a natural break, so a midgame ad may show first
+        /// (CrazyGames paces them itself). Skipped if the player just watched a rewarded ad.
+        /// </summary>
+        void Leave(System.Action go)
+        {
+            Ads.GameplayStop();
+            if (resultShown && !watchedRewarded) Ads.Midgame(go);
+            else go();
         }
 
         /// <summary>Result screen SHOP button: back to the stage select screen with the shop open.</summary>
@@ -318,7 +363,9 @@ namespace TinySwordsBattle
             BackToStageSelect();
         }
 
-        public void Restart()
+        public void Restart() { Leave(DoRestart); }
+
+        void DoRestart()
         {
             Time.timeScale = 1f;
             int i = CurrentStageIndex();
@@ -334,16 +381,20 @@ namespace TinySwordsBattle
             return (catalog != null && i >= 0 && i + 1 < catalog.stages.Count) ? i + 1 : -1;
         }
 
-        public void NextStage()
+        public void NextStage() { Leave(DoNextStage); }
+
+        void DoNextStage()
         {
             int next = NextStageIndex();
-            if (next < 0) { BackToStageSelect(); return; }
+            if (next < 0) { DoBackToStageSelect(); return; }
             GameSession.SelectedStageIndex = next;
             Time.timeScale = 1f;
             SceneFader.Reload();
         }
 
-        public void BackToStageSelect()
+        public void BackToStageSelect() { Leave(DoBackToStageSelect); }
+
+        void DoBackToStageSelect()
         {
             Time.timeScale = 1f;
             SceneFader.Load(stageSelectSceneName);

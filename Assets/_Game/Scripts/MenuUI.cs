@@ -7,17 +7,6 @@ namespace TinySwordsBattle
     /// <summary>Saved player settings.</summary>
     public static class GameSettings
     {
-        public static bool SoundOn
-        {
-            get => PlayerPrefs.GetInt("setting_sound", 1) == 1;
-            set
-            {
-                PlayerPrefs.SetInt("setting_sound", value ? 1 : 0);
-                PlayerPrefs.Save();
-                Apply();
-            }
-        }
-
         public static void Apply()
         {
             AudioListener.volume = 1f; // music and effects have their own volume settings

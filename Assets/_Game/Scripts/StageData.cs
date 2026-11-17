@@ -28,8 +28,6 @@ namespace TinySwordsBattle
         public float incomePerWorker = 1f;
         public int maxWorkers = 5;
         public float playerCastleHp = 700f;
-        [Tooltip("Not used any more: player units are unlocked in the shop (UnitProgress).")]
-        public List<UnitType> availableUnits = new List<UnitType> { UnitType.Pawn, UnitType.Warrior };
 
         [Header("Enemy")]
         public float enemyCastleHp = 600f;

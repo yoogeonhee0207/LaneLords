@@ -37,6 +37,7 @@ namespace TinySwordsBattle
             Time.timeScale = 0f;
             bm.IsPaused = true;
             RefreshLabels();
+            Ads.GameplayStop();
             if (panel != null) panel.SetActive(true);
         }
 
@@ -45,6 +46,7 @@ namespace TinySwordsBattle
             var bm = BattleManager.Instance;
             if (bm != null) bm.IsPaused = false;
             Time.timeScale = speedBeforePause;
+            Ads.GameplayStart();
             if (panel != null) panel.SetActive(false);
         }
 

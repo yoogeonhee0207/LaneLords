@@ -117,12 +117,6 @@ namespace TinySwordsBattle
             return b;
         }
 
-        public static void SetLabel(Button b, string text)
-        {
-            var t = b.GetComponentInChildren<Text>();
-            if (t != null) t.text = text;
-        }
-
         /// <summary>Full-screen dimmed window with a paper sheet, a ribbon title and a CLOSE button.</summary>
         public static GameObject Window(string name, string title, Vector2 paperSize, UnityAction onClose, out RectTransform paper)
         {

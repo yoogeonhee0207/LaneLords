@@ -20,7 +20,6 @@ MonoBehaviour:
   incomePerWorker: 1
   maxWorkers: 5
   playerCastleHp: 700
-  availableUnits: 0000000001000000i
   enemyCastleHp: 4550
   enemyIncome: 13.25
   enemyStartGold: 0

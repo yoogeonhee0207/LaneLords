@@ -460,7 +460,6 @@ namespace TinySwordsBattle.EditorTools
         /// </summary>
         static StageCatalog MakeStages(Dictionary<string, UnitData> m)
         {
-            var basic = new List<UnitType> { UnitType.Pawn, UnitType.Warrior };
             UnitData torch = M(m, "Torch Goblin"), spear = M(m, "Spear Goblin"), snake = M(m, "Snake"), spider = M(m, "Spider");
             UnitData gnome = M(m, "Gnome"), sling = M(m, "Slingshot Gnome"), bee = M(m, "Bumblebee"), bear = M(m, "Bear");
             UnitData paddle = M(m, "Paddle Shark"), harpoon = M(m, "Harpoon Shark"), bomb = M(m, "Bomb Fish"), lizard = M(m, "Lizard"), turtle = M(m, "Turtle");
@@ -469,33 +468,33 @@ namespace TinySwordsBattle.EditorTools
             var stages = new List<StageData>
             {
                 // Chapter 1: Dark Forest
-                MakeStage("1-1", basic, 5.0f,  1.00f, 600,  null, 0f, Choice(torch, 1)),
-                MakeStage("1-2", basic, 5.25f, 1.00f, 650,  null, 0f, Choice(torch, 2), Choice(snake, 1)),
-                MakeStage("1-3", basic, 5.5f,  1.05f, 700,  null, 0f, Choice(torch, 2), Choice(snake, 1), Choice(spider, 1)),
-                MakeStage("1-4", basic, 5.75f, 1.10f, 800,  null, 0f, Choice(torch, 2), Choice(spear, 1), Choice(spider, 1)),
-                MakeStage("1-5", basic, 6.0f,  1.15f, 850,  null, 0f, Choice(torch, 1), Choice(spear, 1), Choice(snake, 1), Choice(spider, 1)),
-                MakeStage("1-6", basic, 6.0f,  1.10f, 950,  M(m, "Hex Shaman"), 1.15f, Choice(torch, 2), Choice(spear, 1), Choice(snake, 1), Choice(spider, 1)),
+                MakeStage("1-1", 5.0f,  1.00f, 600,  null, 0f, Choice(torch, 1)),
+                MakeStage("1-2", 5.25f, 1.00f, 650,  null, 0f, Choice(torch, 2), Choice(snake, 1)),
+                MakeStage("1-3", 5.5f,  1.05f, 700,  null, 0f, Choice(torch, 2), Choice(snake, 1), Choice(spider, 1)),
+                MakeStage("1-4", 5.75f, 1.10f, 800,  null, 0f, Choice(torch, 2), Choice(spear, 1), Choice(spider, 1)),
+                MakeStage("1-5", 6.0f,  1.15f, 850,  null, 0f, Choice(torch, 1), Choice(spear, 1), Choice(snake, 1), Choice(spider, 1)),
+                MakeStage("1-6", 6.0f,  1.10f, 950,  M(m, "Hex Shaman"), 1.15f, Choice(torch, 2), Choice(spear, 1), Choice(snake, 1), Choice(spider, 1)),
                 // Chapter 2: Bamboo Hills
-                MakeStage("2-1", basic, 7.5f,  1.40f, 1050, null, 0f, Choice(gnome, 2), Choice(bee, 1)),
-                MakeStage("2-2", basic, 7.75f, 1.45f, 1150, null, 0f, Choice(gnome, 2), Choice(bee, 1), Choice(sling, 1)),
-                MakeStage("2-3", basic, 8.0f,  1.52f, 1250, null, 0f, Choice(gnome, 2), Choice(sling, 1), Choice(bear, 0.5f)),
-                MakeStage("2-4", basic, 8.75f, 1.65f, 1400, null, 0f, Choice(gnome, 1), Choice(bee, 1), Choice(sling, 1), Choice(bear, 0.5f)),
-                MakeStage("2-5", basic, 9.5f,  1.80f, 1500, null, 0f, Choice(gnome, 1), Choice(bee, 1), Choice(sling, 1), Choice(bear, 1)),
-                MakeStage("2-6", basic, 9.0f,  1.70f, 1650, M(m, "Panda"), 1.20f, Choice(gnome, 2), Choice(bee, 1), Choice(sling, 1), Choice(bear, 1)),
+                MakeStage("2-1", 7.5f,  1.40f, 1050, null, 0f, Choice(gnome, 2), Choice(bee, 1)),
+                MakeStage("2-2", 7.75f, 1.45f, 1150, null, 0f, Choice(gnome, 2), Choice(bee, 1), Choice(sling, 1)),
+                MakeStage("2-3", 8.0f,  1.52f, 1250, null, 0f, Choice(gnome, 2), Choice(sling, 1), Choice(bear, 0.5f)),
+                MakeStage("2-4", 8.75f, 1.65f, 1400, null, 0f, Choice(gnome, 1), Choice(bee, 1), Choice(sling, 1), Choice(bear, 0.5f)),
+                MakeStage("2-5", 9.5f,  1.80f, 1500, null, 0f, Choice(gnome, 1), Choice(bee, 1), Choice(sling, 1), Choice(bear, 1)),
+                MakeStage("2-6", 9.0f,  1.70f, 1650, M(m, "Panda"), 1.20f, Choice(gnome, 2), Choice(bee, 1), Choice(sling, 1), Choice(bear, 1)),
                 // Chapter 3: Shore and Canyon
-                MakeStage("3-1", basic, 9.0f,  1.72f, 1800, null, 0f, Choice(paddle, 2), Choice(lizard, 1)),
-                MakeStage("3-2", basic, 9.25f, 1.78f, 2000, null, 0f, Choice(paddle, 2), Choice(lizard, 1), Choice(harpoon, 1)),
-                MakeStage("3-3", basic, 9.5f,  1.85f, 2200, null, 0f, Choice(paddle, 1), Choice(harpoon, 1), Choice(turtle, 0.5f), Choice(lizard, 1)),
-                MakeStage("3-4", basic, 9.75f, 1.90f, 2400, null, 0f, Choice(paddle, 1), Choice(harpoon, 1), Choice(bomb, 0.5f), Choice(turtle, 0.5f)),
-                MakeStage("3-5", basic, 10.75f,2.08f, 2600, null, 0f, Choice(paddle, 1), Choice(lizard, 1), Choice(harpoon, 1), Choice(bomb, 1), Choice(turtle, 1)),
-                MakeStage("3-6", basic, 10.0f, 1.95f, 2900, M(m, "Minotaur"), 1.75f, Choice(paddle, 2), Choice(lizard, 1), Choice(harpoon, 1), Choice(bomb, 1), Choice(turtle, 1)),
+                MakeStage("3-1", 9.0f,  1.72f, 1800, null, 0f, Choice(paddle, 2), Choice(lizard, 1)),
+                MakeStage("3-2", 9.25f, 1.78f, 2000, null, 0f, Choice(paddle, 2), Choice(lizard, 1), Choice(harpoon, 1)),
+                MakeStage("3-3", 9.5f,  1.85f, 2200, null, 0f, Choice(paddle, 1), Choice(harpoon, 1), Choice(turtle, 0.5f), Choice(lizard, 1)),
+                MakeStage("3-4", 9.75f, 1.90f, 2400, null, 0f, Choice(paddle, 1), Choice(harpoon, 1), Choice(bomb, 0.5f), Choice(turtle, 0.5f)),
+                MakeStage("3-5", 10.75f,2.08f, 2600, null, 0f, Choice(paddle, 1), Choice(lizard, 1), Choice(harpoon, 1), Choice(bomb, 1), Choice(turtle, 1)),
+                MakeStage("3-6", 10.0f, 1.95f, 2900, M(m, "Minotaur"), 1.75f, Choice(paddle, 2), Choice(lizard, 1), Choice(harpoon, 1), Choice(bomb, 1), Choice(turtle, 1)),
                 // Chapter 4: Troll Lands
-                MakeStage("4-1", basic, 11.0f, 2.10f, 3150, null, 0f, Choice(skull, 2), Choice(bat, 1)),
-                MakeStage("4-2", basic, 11.5f, 2.20f, 3450, null, 0f, Choice(skull, 2), Choice(bat, 1), Choice(gnoll, 1)),
-                MakeStage("4-3", basic, 12.0f, 2.30f, 3800, null, 0f, Choice(skull, 1), Choice(bat, 1), Choice(imp, 1), Choice(gnoll, 1)),
-                MakeStage("4-4", basic, 12.5f, 2.42f, 4150, null, 0f, Choice(skull, 1), Choice(imp, 1), Choice(gnoll, 1), Choice(thief, 0.5f)),
-                MakeStage("4-5", basic, 13.25f,2.60f, 4550, null, 0f, Choice(skull, 1), Choice(bat, 1), Choice(imp, 1), Choice(gnoll, 1), Choice(thief, 1)),
-                MakeStage("4-6", basic, 11.5f, 2.30f, 5000, M(m, "Troll"), 1.60f, Choice(skull, 2), Choice(bat, 1), Choice(imp, 1), Choice(gnoll, 1), Choice(thief, 1)),
+                MakeStage("4-1", 11.0f, 2.10f, 3150, null, 0f, Choice(skull, 2), Choice(bat, 1)),
+                MakeStage("4-2", 11.5f, 2.20f, 3450, null, 0f, Choice(skull, 2), Choice(bat, 1), Choice(gnoll, 1)),
+                MakeStage("4-3", 12.0f, 2.30f, 3800, null, 0f, Choice(skull, 1), Choice(bat, 1), Choice(imp, 1), Choice(gnoll, 1)),
+                MakeStage("4-4", 12.5f, 2.42f, 4150, null, 0f, Choice(skull, 1), Choice(imp, 1), Choice(gnoll, 1), Choice(thief, 0.5f)),
+                MakeStage("4-5", 13.25f,2.60f, 4550, null, 0f, Choice(skull, 1), Choice(bat, 1), Choice(imp, 1), Choice(gnoll, 1), Choice(thief, 1)),
+                MakeStage("4-6", 11.5f, 2.30f, 5000, M(m, "Troll"), 1.60f, Choice(skull, 2), Choice(bat, 1), Choice(imp, 1), Choice(gnoll, 1), Choice(thief, 1)),
             };
 
             string path = $"{Root}/Data/StageCatalog.asset";
@@ -542,7 +541,7 @@ namespace TinySwordsBattle.EditorTools
             }
         }
 
-        static StageData MakeStage(string name, List<UnitType> available, float enemyIncome, float mult, float enemyCastle,
+        static StageData MakeStage(string name, float enemyIncome, float mult, float enemyCastle,
             UnitData boss, float bossMult, params EnemyUnitChoice[] enemies)
         {
             string path = $"{Root}/Data/Stage_{name}.asset";
@@ -551,7 +550,6 @@ namespace TinySwordsBattle.EditorTools
             {
                 stage = ScriptableObject.CreateInstance<StageData>();
                 stage.stageName = name;
-                stage.availableUnits = new List<UnitType>(available);
                 stage.enemyIncome = enemyIncome;
                 stage.enemyStatMultiplier = mult;
                 stage.enemyCastleHp = enemyCastle;
@@ -1326,6 +1324,18 @@ namespace TinySwordsBattle.EditorTools
             ResultButton(paper.transform, "Stages", "STAGES", -95f, blueButton, new UnityAction(bm.BackToStageSelect));
             ResultButton(paper.transform, "Shop", "SHOP", 95f, redButton, new UnityAction(bm.GoToShop));
             bm.nextStageButton = ResultButton(paper.transform, "Next", "NEXT", 285f, blueButton, new UnityAction(bm.NextStage)).gameObject;
+
+            // Win only, when an ad can be shown: watch a rewarded ad for the stage's gems again.
+            var adBtn = MakeButton(paper.transform, "Double Gems", new Vector2(0.5f, 0.5f), new Vector2(0f, -285f), new Vector2(0.5f, 0.5f),
+                new Vector2(520f, 90f), Color.white);
+            var adImg = adBtn.GetComponent<Image>();
+            adImg.sprite = redButton;
+            adImg.pixelsPerUnitMultiplier = 2.5f;
+            bm.doubleGemsLabel = MakeText(adBtn.transform, "Label", "WATCH AD: +30 GEMS", 32, TextAnchor.MiddleCenter,
+                new Vector2(0.5f, 0.5f), new Vector2(0f, 4f), new Vector2(500f, 90f));
+            UnityEventTools.AddPersistentListener(adBtn.onClick, new UnityAction(bm.WatchDoubleGems));
+            bm.doubleGemsButton = adBtn.gameObject;
+            adBtn.gameObject.SetActive(false);
 
             bm.resultNotice = MakeText(paper.transform, "Notice", "", 30, TextAnchor.MiddleCenter,
                 new Vector2(0.5f, 0.5f), new Vector2(0f, -60f), new Vector2(800f, 50f));
